@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -46,7 +47,19 @@ class StringExpression : public AbstractExpression {
 
   auto Compute(const std::string &val) const -> std::string {
     // TODO(student): implement upper / lower.
-    return {};
+    std::string result;
+    result.resize(val.size());
+    switch (expr_type_) {
+      case bustub::StringExpressionType::Upper:
+        std::transform(val.begin(), val.end(), result.begin(), ::toupper);
+        break;
+      case bustub::StringExpressionType::Lower:
+        std::transform(val.begin(), val.end(), result.begin(), ::tolower);
+        break;
+      default:
+        throw std::runtime_error{"Unsupported expression type"};
+    }
+    return result;
   }
 
   auto Evaluate(const Tuple *tuple, const Schema &schema) const -> Value override {
