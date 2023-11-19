@@ -32,9 +32,15 @@ void TrieStore::Put(std::string_view key, T value) {
   // The logic should be somehow similar to `TrieStore::Get`.
   //throw NotImplementedException("TrieStore::Put is not implemented.");
   std::lock_guard<std::mutex> lock(write_lock_);
+  Trie cur;
   {
     std::lock_guard<std::mutex> guard(root_lock_);
-    root_=root_.Put<T>(key,std::move(value));
+    cur=root_;
+  }
+  cur=cur.Put<T>(key,std::move(value));
+  {
+    std::lock_guard<std::mutex> guard(root_lock_);
+    root_=cur;
   }
 }
 
@@ -43,9 +49,15 @@ void TrieStore::Remove(std::string_view key) {
   // The logic should be somehow similar to `TrieStore::Get`.
   //throw NotImplementedException("TrieStore::Remove is not implemented.");
   std::lock_guard<std::mutex> lock(write_lock_);
-    {
+  Trie cur;
+  {
     std::lock_guard<std::mutex> guard(root_lock_);
-    root_=root_.Remove(key);
+    cur=root_;
+  }
+  cur=cur.Remove(key);
+  {
+    std::lock_guard<std::mutex> guard(root_lock_);
+    root_=cur;
   }
 }
 
