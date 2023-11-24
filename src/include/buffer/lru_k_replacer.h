@@ -39,13 +39,13 @@ class LRUKNode {
    * @brief Retrieves the frame id associated with this node.
    * @return The frame id.
    */
-  auto GetFrameId() const-> frame_id_t;
+  auto GetFrameId() const -> frame_id_t;
 
   /**
    * @brief Checks if the node is evictable.
    * @return True if the node is evictable, otherwise False.
    */
-  auto IsEvictable() const-> bool;
+  auto IsEvictable() const -> bool;
 
   /**
    * @brief Sets the evictable status of this node.
@@ -57,7 +57,7 @@ class LRUKNode {
    * @brief Retrieves the earliest timestamp from the node's access history.
    * @return The earliest timestamp.
    */
-  auto GetEarliestTimestamp() const->size_t;
+  auto GetEarliestTimestamp() const -> size_t;
 
   /**
    * @brief Records an access at the given timestamp.
@@ -65,9 +65,8 @@ class LRUKNode {
    */
   void RecordAccess(size_t timestamp, AccessType type = AccessType::Unknown);
 
-  auto GetHistory() const->std::list<size_t>;
+  auto GetHistory() const -> std::list<size_t>;
   void SetHistory(size_t timestamp);
-
 
  private:
   /** History of last seen K timestamps of this page. Least recent timestamp stored in front. */
