@@ -15,6 +15,7 @@
 #include "common/config.h"
 #include "common/exception.h"
 #include "common/macros.h"
+#include "storage/page/page.h"
 #include "storage/page/page_guard.h"
 
 namespace bustub {
@@ -262,12 +263,38 @@ auto BufferPoolManager::FetchPage(page_id_t page_id, [[maybe_unused]] AccessType
 
 auto BufferPoolManager::AllocatePage() -> page_id_t { return next_page_id_++; }
 
-auto BufferPoolManager::FetchPageBasic(page_id_t page_id) -> BasicPageGuard { return {this, nullptr}; }
+auto BufferPoolManager::FetchPageBasic(page_id_t page_id) -> BasicPageGuard {
+  Page *page = FetchPage(page_id);
+  if (page != nullptr) {
+    return {this, nullptr};
+  }
+  return {nullptr, nullptr};
+}
 
-auto BufferPoolManager::FetchPageRead(page_id_t page_id) -> ReadPageGuard { return {this, nullptr}; }
+auto BufferPoolManager::FetchPageRead(page_id_t page_id) -> ReadPageGuard {
+  Page *page = FetchPage(page_id);
+  if (page != nullptr) {
+    page->RLatch();
+    return {this, nullptr};
+  }
+  return {nullptr, nullptr};
+}
 
-auto BufferPoolManager::FetchPageWrite(page_id_t page_id) -> WritePageGuard { return {this, nullptr}; }
+auto BufferPoolManager::FetchPageWrite(page_id_t page_id) -> WritePageGuard {
+  Page *page = FetchPage(page_id);
+  if (page != nullptr) {
+    page->WLatch();
+    return {this, nullptr};
+  }
+  return {nullptr, nullptr};
+}
 
-auto BufferPoolManager::NewPageGuarded(page_id_t *page_id) -> BasicPageGuard { return {this, nullptr}; }
+auto BufferPoolManager::NewPageGuarded(page_id_t *page_id) -> BasicPageGuard {
+  Page *page = NewPage(page_id);
+  if (page != nullptr) {
+    return {this, nullptr};
+  }
+  return {nullptr, nullptr};
+}
 
 }  // namespace bustub

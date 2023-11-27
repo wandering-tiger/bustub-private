@@ -63,6 +63,8 @@ class BasicPageGuard {
 
   auto GetData() -> const char * { return page_->GetData(); }
 
+  auto IsValid() -> bool;
+
   template <class T>
   auto As() -> const T * {
     return reinterpret_cast<const T *>(GetData());
