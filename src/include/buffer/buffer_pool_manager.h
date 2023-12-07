@@ -16,12 +16,12 @@
 #include <memory>
 #include <mutex>  // NOLINT
 #include <unordered_map>
+#include <vector>
 
 #include "buffer/lru_k_replacer.h"
 #include "common/config.h"
 #include "recovery/log_manager.h"
 #include "storage/disk/disk_manager.h"
-// #include "storage/disk/disk_scheduler.h"
 #include "storage/page/page.h"
 #include "storage/page/page_guard.h"
 
@@ -96,11 +96,6 @@ class BufferPoolManager {
    * the replacer (always find from the free list first), read the page from disk by calling disk_manager_->ReadPage(),
    * and replace the old page in the frame. Similar to NewPage(), if the old page is dirty, you need to write it back
    * to disk and update the metadata of the new page
-   *
-   * First search for page_id in the buffer pool. If not found, pick a replacement frame from either the free list or
-   * the replacer (always find from the free list first), read the page from disk by scheduling a read DiskRequest with
-   * disk_scheduler_->Schedule(), and replace the old page in the frame. Similar to NewPage(), if the old page is dirty,
-   * you need to write it back to disk and update the metadata of the new page
    *
    * In addition, remember to disable eviction and record the access history of the frame like you did for NewPage().
    *
@@ -188,8 +183,6 @@ class BufferPoolManager {
   Page *pages_;
   /** Pointer to the disk manager. */
   DiskManager *disk_manager_ __attribute__((__unused__));
-  /** Pointer to the disk sheduler. */
-  // std::unique_ptr<DiskScheduler> disk_scheduler_ __attribute__((__unused__));
   /** Pointer to the log manager. Please ignore this for P1. */
   LogManager *log_manager_ __attribute__((__unused__));
   /** Page table for keeping track of buffer pool pages. */
@@ -216,8 +209,6 @@ class BufferPoolManager {
   }
 
   // TODO(student): You may add additional private members and helper functions
-  void ResetPageMetaInFrame(frame_id_t frame_id);
-  void PickReplacementFrame(frame_id_t *frame_id);
   auto FindFrameSlotHepler(frame_id_t *frame_id) -> bool;
 };
 }  // namespace bustub
