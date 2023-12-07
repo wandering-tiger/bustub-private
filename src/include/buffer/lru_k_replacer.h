@@ -24,7 +24,8 @@
 
 namespace bustub {
 
-enum class AccessType { Unknown = 0, Lookup, Scan, Index };
+// enum class AccessType { Unknown = 0, Lookup, Scan, Index };
+enum class AccessType { Unknown = 0, Get, Scan };
 
 class LRUKNode {
  public:

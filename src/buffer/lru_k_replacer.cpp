@@ -78,6 +78,36 @@ auto LRUKReplacer::Evict(frame_id_t *frame_id) -> bool {
   }
   latch_.unlock();
   return evict;
+  // size_t min_least_recent = LONG_LONG_MAX;
+  // size_t min_k_least_recent = LONG_LONG_MAX;
+  // bool evict = false;
+
+  // latch_.lock();
+  // for (const auto &store : node_store_) {
+  //   if (store.second.IsEvictable()) {
+  //     auto node = store.second;
+  //     size_t least_recent = node.GetHistory().back();
+  //     size_t least_k_recent = node.GetHistory().front();
+  //     if (node.GetHistory().size() < k_ && min_least_recent > least_recent) {
+  //       *frame_id = node.GetFrameId();
+  //       min_least_recent = least_recent;
+  //       min_k_least_recent = 0;
+  //       evict = true;
+  //     } else if (min_k_least_recent > least_k_recent) {
+  //       min_k_least_recent = least_k_recent;
+  //       *frame_id = node.GetFrameId();
+  //       evict = true;
+  //     }
+  //   }
+  // }
+
+  // if (evict) {
+  //   node_store_.erase(*frame_id);
+  //   curr_size_--;
+  // }
+  // latch_.unlock();
+
+  // return evict;
 }
 
 void LRUKReplacer::RecordAccess(frame_id_t frame_id, [[maybe_unused]] AccessType access_type) {
