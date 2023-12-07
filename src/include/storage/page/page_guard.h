@@ -59,11 +59,11 @@ class BasicPageGuard {
    */
   ~BasicPageGuard();
 
+  auto IsValid() -> bool;
+
   auto PageId() -> page_id_t { return page_->GetPageId(); }
 
   auto GetData() -> const char * { return page_->GetData(); }
-
-  auto IsValid() -> bool;
 
   template <class T>
   auto As() -> const T * {
@@ -84,7 +84,7 @@ class BasicPageGuard {
   friend class ReadPageGuard;
   friend class WritePageGuard;
 
-  [[maybe_unused]] BufferPoolManager *bpm_{nullptr};
+  BufferPoolManager *bpm_{nullptr};
   Page *page_{nullptr};
   bool is_dirty_{false};
 };
@@ -185,6 +185,8 @@ class WritePageGuard {
    * want to release these resources.
    */
   void Drop();
+
+  auto IsValid() -> bool;
 
   /** TODO(P1): Add implementation
    *
